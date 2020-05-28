@@ -46,7 +46,9 @@ class ProbabilisticGameOfLife(object):
                 
                 if num_resurrections:
                     probable_neighbor_idx = np.random.choice(len(probable_neighbors), size=num_resurrections, replace=False)
-                    probable_neighbors = probable_neighbors[probable_neighbor_idx, :].tolist()
+                    probable_neighbors = probable_neighbors[probable_neighbor_idx, :]
+                else:
+                    probable_neighbors = []
             
             neighbors = list(true_neighbors) + probable_neighbors
             return [((i + v) % self.M, (j + h) % self.N) for (h, v) in neighbors]
