@@ -1,0 +1,1 @@
+web: streamlit run apps/game_of_life/app.py
