@@ -83,7 +83,7 @@ st.markdown(
     "- Any live cell with two or three live neighbours lives with probability (1−$t$) on to the next generation  \n"
     "- Any live cell with more than three live neighbours dies with probability (1−$t$)  \n"
     "- Any dead cell with exactly three live neighbours becomes a live cell with probability (1−$t$) otherwise they becomes a live cell with probability $t$  \n"
-    "- (Special) Any cells within the radius of x cells of an active cells also have the probability of being alive with probability $t$"
+    "- (Special) Any cells within the radius of x cells of an active cell also have the probability of being alive with probability $t$"
     )
 
 pattern = st.sidebar.radio('Starting Pattern', ('Blinker', 'Boat', 'Beacon', 'Glider'))
