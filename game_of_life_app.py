@@ -19,10 +19,10 @@ st.title('Probabilistic Game of Life')
 st.subheader('Rules:')
 st.markdown(
     "Given that  $t$ represents a small probability (0.01), the rules for this game are:  \n"
-    "- Any live cell with fewer than two live neighbours dies with probability (1−$t$)  \n"
-    "- Any live cell with two or three live neighbours lives with probability (1−$t$) on to the next generation  \n"
-    "- Any live cell with more than three live neighbours dies with probability (1−$t$)  \n"
-    "- Any dead cell with exactly three live neighbours becomes a live cell with probability (1−$t$) otherwise they becomes a live cell with probability $t$  \n"
+    "- Any live cell with fewer than two live neighbors dies with probability (1−$t$)  \n"
+    "- Any live cell with two or three live neighbors lives with probability (1−$t$) on to the next generation  \n"
+    "- Any live cell with more than three live neighbors dies with probability (1−$t$)  \n"
+    "- Any dead cell with exactly three live neighbors becomes a live cell with probability (1−$t$) otherwise they becomes a live cell with probability $t$  \n"
     "- (Special) Any cells within the radius of x cells of an active cell also have the probability of being alive with probability $t$"
     )
 
@@ -46,13 +46,16 @@ n_cols = board_size
 game = ProbabilisticGameOfLife(active_cells, n_rows, n_cols, probability, leak_radius=radius)
 heatmap_location = st.empty()
 if st.sidebar.button('Start Simulation'):
+    bar = st.sidebar.progress(0)
     board = game.get_board()
     fig = px.imshow(board, color_continuous_scale='gray', zmin=0, zmax=1)
     heatmap_location.plotly_chart(fig)
-    for _ in range(num_iterations):
+    for i in range(num_iterations):
         board, is_dead = game.get_next_board()
         fig = px.imshow(board, color_continuous_scale='gray', zmin=0, zmax=1)
         heatmap_location.plotly_chart(fig)
         if is_dead:
             break
         time.sleep(speed)
+        bar.progress((i+1)/num_iterations)
+    bar.progress(100)
