@@ -1,1 +1,1 @@
-web: streamlit run apps/game_of_life/app.py --server.port $PORT
+web: streamlit run game_of_life_app.py --server.port $PORT
