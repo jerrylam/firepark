@@ -3,17 +3,16 @@ import pandas
 import time
 import datetime
 
+import plotly.graph_objects as go
 from scipy.sparse import coo_matrix
 import plotly.express as px
-
 import numpy as np
 from numpy.random import randint
-
 import copy
 import itertools
-from firepark.game.life import ProbabilisticGameOfLife
-from firepark.game.pattern import Blinker, Glider, Boat, Beacon
 
+from firepark.game.life import ProbabilisticGameOfLife
+from firepark.game.pattern import Pattern
 
 st.title('Probabilistic Game of Life')
 st.subheader('Rules:')
@@ -35,25 +34,38 @@ speed = st.sidebar.slider('Speed', 0.0, 1.0, 0.1)
 
 board_center = int(board_size/2)
 
-patterns = {'Blinker': Blinker(board_center, board_center),
-            'Boat': Boat(board_center, board_center),
-            'Beacon': Beacon(board_center, board_center),
-            'Glider': Glider(board_center, board_center),
-           }
-active_cells = patterns[pattern_selection].pattern
+pattern = Pattern(board_center, board_center)
+
+patterns = {'Blinker': pattern.blinker,
+            'Boat': pattern.boat,
+            'Beacon': pattern.beacon,
+            'Glider': pattern.glider}
+
+active_cells = patterns[pattern_selection]
 n_rows = board_size
 n_cols = board_size
 game = ProbabilisticGameOfLife(active_cells, n_rows, n_cols, probability, leak_radius=radius)
-heatmap_location = st.empty()
+
 if st.sidebar.button('Start Simulation'):
+    heatmap_location = st.empty()
+    alive_prob_location = st.empty()
     bar = st.sidebar.progress(0)
     board = game.get_board()
-    fig = px.imshow(board, color_continuous_scale='gray', zmin=0, zmax=1)
-    heatmap_location.plotly_chart(fig)
+    board_fig = px.imshow(board, color_continuous_scale='gray', zmin=0, zmax=1)
+    heatmap_location.plotly_chart(board_fig)
+    iterations = []
+    alive_probs = []
     for i in range(num_iterations):
+        iterations.append(i)
+        alive_probs.append(len(game.active_cells)/(board_size*board_size))
+        alive_fig = go.Figure(data=go.Scatter(x=iterations, y=alive_probs))
+        alive_fig.update_layout(title='Alive Probability over Time',
+                                xaxis_title='Iteration',
+                                yaxis_title='Alive Probability') 
         board, is_dead = game.get_next_board()
-        fig = px.imshow(board, color_continuous_scale='gray', zmin=0, zmax=1)
-        heatmap_location.plotly_chart(fig)
+        board_fig = px.imshow(board, color_continuous_scale='gray', zmin=0, zmax=1)
+        heatmap_location.plotly_chart(board_fig)
+        alive_prob_location.plotly_chart(alive_fig)
         if is_dead:
             break
         time.sleep(speed)

@@ -4,41 +4,42 @@ from dataclasses import dataclass, field
 class Pattern:
     x: int
     y: int
-    pattern: dict = field(init=False)
+    blinker: dict = field(init=False)
+    glider: dict = field(init=False)
+    beacon: dict = field(init=False)
+    boat: dict = field(init=False)
 
-@dataclass
-class Blinker(Pattern):
     def __post_init__(self):
-        self.pattern = {(self.x, self.y): 1,
+        self.init_blinker()
+        self.init_glider()
+        self.init_boat()
+        self.init_beacon()
+
+    def init_blinker(self):
+        self.blinker = {(self.x, self.y): 1,
                         (self.x - 1, self.y): 1,
                         (self.x + 1, self.y): 1}
 
-@dataclass
-class Glider(Pattern):
-    def __post_init__(self):
-        self.pattern = {(self.x, self.y - 1): 1,
-                        (self.x - 1, self.y - 1): 1,
-                        (self.x - 1, self.y): 1,
-                        (self.x + 1, self.y): 1,
-                        (self.x, self.y+ 1): 1}
+    def init_glider(self):
+        self.glider = {(self.x, self.y - 1): 1,
+                       (self.x - 1, self.y - 1): 1,
+                       (self.x - 1, self.y): 1,
+                       (self.x + 1, self.y): 1,
+                       (self.x, self.y+ 1): 1}
 
-@dataclass
-class Boat(Pattern):
-    def __post_init__(self):
-        self.pattern = {(self.x, self.y - 1): 1,
-                        (self.x - 1, self.y - 1): 1,
-                        (self.x - 1, self.y ): 1,
-                        (self.x + 1, self.y ): 1,
-                        (self.x, self.y + 1): 1}
+    def init_boat(self):
+        self.boat = {(self.x, self.y - 1): 1,
+                     (self.x - 1, self.y - 1): 1,
+                     (self.x - 1, self.y ): 1,
+                     (self.x + 1, self.y ): 1,
+                     (self.x, self.y + 1): 1}
 
-@dataclass
-class Beacon(Pattern):
-    def __post_init__(self):
-        self.pattern = {(self.x  - 1, self.y): 1,
-                        (self.x  - 1, self.y - 1): 1,
-                        (self.x  - 2, self.y): 1,
-                        (self.x  - 2, self.y - 1): 1,
-                        (self.x, self.y + 1): 1,
-                        (self.x, self.y + 2): 1,
-                        (self.x  + 1, self.y + 1): 1,
-                        (self.x  + 1, self.y + 2): 1}
+    def init_beacon(self):
+        self.beacon = {(self.x  - 1, self.y): 1,
+                       (self.x  - 1, self.y - 1): 1,
+                       (self.x  - 2, self.y): 1,
+                       (self.x  - 2, self.y - 1): 1,
+                       (self.x, self.y + 1): 1,
+                       (self.x, self.y + 2): 1,
+                       (self.x  + 1, self.y + 1): 1,
+                       (self.x  + 1, self.y + 2): 1}
